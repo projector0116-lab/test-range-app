@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>さなる式 定期テスト範囲確認</title>
     <style>
+           <style>
         :root {
             --primary-blue: #0070e0;
             --blue-gradient: linear-gradient(135deg, #0076f7 0%, #0052b3 100%);
-            --top-dark-blue: #1c3d5a; /* 本物の画面に合わせた深みのある紺・青色 */
+            --top-dark-blue: #0056b3; /* 💡 タブレット画面に合わせた鮮やかな青色に変更 */
             --btn-border: #1473e6;
             --bg-body: #ffffff;
             --text-dark: #2c2c2c;
@@ -23,17 +24,19 @@
             margin: 0; padding: 0; background-color: var(--bg-body); color: var(--text-dark);
         }
         
-        /* 💡 ヘッダーの文字を丸ごと包み込む青い帯（トップバー） */
+        /* 💡 帯の中の文字幅が、下のコンテンツ（600px）とぴったり重なるように修正 */
         .top-navbar-band {
             width: 100%; 
             background-color: var(--top-dark-blue); 
-            padding: 15px 20px; 
+            padding: 15px 0; 
             box-sizing: border-box;
             color: #ffffff;
         }
         .header-content-inner {
-            max-width: 600px;
+            max-width: 600px; /* 下のカードと完全に同じ横幅 */
             margin: 0 auto;
+            padding: 0 15px;  /* 左右の余白（ズレ防止） */
+            box-sizing: border-box;
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
@@ -46,7 +49,6 @@
         .top-meta { font-size: 11px; color: var(--text-gray); margin-bottom: 8px; }
         .alert-text { color: var(--alert-yellow); font-size: 12px; margin-bottom: 12px; font-weight: bold; min-height: 18px; }
         
-        /* 上下タブボタン */
         .info-banner { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
         .banner-box { border: 1px solid var(--border-light); border-radius: 8px; overflow: hidden; cursor: pointer; background-color: #ffffff; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .banner-box .banner-title { padding: 10px 14px; font-weight: 700; font-size: 14px; color: var(--text-dark); background-color: #ffffff; border-bottom: 1px solid #f0f0f5; }
@@ -79,8 +81,7 @@
         .view-section.active-view { display: block; }
         @media (max-width: 600px) { .info-banner { grid-template-columns: 1fr; } }
     </style>
-</head>
-<body>
+
 
 <!-- 💡 青い帯（トップバー）の中にヘッダー文字一式を完全に移動 -->
 <div class="top-navbar-band">
