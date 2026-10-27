@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>さなる式 定期テスト範囲確認</title>
+    <style>
+        :root {
+            --primary-blue: #0070e0;
+            --blue-gradient: linear-gradient(135deg, #0076f7 0%, #0052b3 100%);
+            --top-dark-blue: #1c3d5a; /* 本物の画面に合わせた深みのある紺・青色 */
+            --btn-border: #1473e6;
+            --bg-body: #ffffff;
+            --text-dark: #2c2c2c;
+            --text-blue: #0056b3;
+            --text-gray: #6e6e73;
+            --border-light: #d2d2d7;
+            --card-header-bg: #e8f1fc;
+            --alert-yellow: #e6b800;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0; padding: 0; background-color: var(--bg-body); color: var(--text-dark);
+        }
+        
+        /* 💡 ヘッダーの文字を丸ごと包み込む青い帯（トップバー） */
+        .top-navbar-band {
+            width: 100%; 
+            background-color: var(--top-dark-blue); 
+            padding: 15px 20px; 
+            box-sizing: border-box;
+            color: #ffffff;
+        }
+        .header-content-inner {
+            max-width: 600px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        .header-title h1 { margin: 0; font-size: 20px; font-weight: 700; color: #ffffff; }
+        .header-title p { margin: 4px 0 0 0; font-size: 13px; color: rgba(255, 255, 255, 0.8); }
+        .header-right { text-align: right; font-size: 11px; color: rgba(255, 255, 255, 0.7); line-height: 1.4; }
+        
+        .container { max-width: 600px; margin: 0 auto; padding: 15px; box-sizing: border-box; }
+        .top-meta { font-size: 11px; color: var(--text-gray); margin-bottom: 8px; }
+        .alert-text { color: var(--alert-yellow); font-size: 12px; margin-bottom: 12px; font-weight: bold; min-height: 18px; }
+        
+        /* 上下タブボタン */
+        .info-banner { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+        .banner-box { border: 1px solid var(--border-light); border-radius: 8px; overflow: hidden; cursor: pointer; background-color: #ffffff; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .banner-box .banner-title { padding: 10px 14px; font-weight: 700; font-size: 14px; color: var(--text-dark); background-color: #ffffff; border-bottom: 1px solid #f0f0f5; }
+        .banner-box .banner-body { padding: 12px 14px; font-size: 12px; color: var(--text-gray); background-color: #ffffff; }
+        
+        .banner-box.active { border-color: transparent; background: var(--blue-gradient); box-shadow: 0 4px 10px rgba(0,112,224,0.2); }
+        .banner-box.active .banner-title { background: transparent; color: #ffffff; border-bottom-color: transparent; }
+        .banner-box.active .banner-body { background: transparent; color: rgba(255,255,255,0.9); }
+        
+        .update-row { display: flex; justify-content: flex-end; margin-bottom: 15px; }
+        .update-btn { background: #ffffff; border: 1px solid var(--border-light); padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 500; color: var(--primary-blue); transition: all 0.1s; }
+        .update-btn:active { background: rgba(255, 255, 255, 0.6) !important; opacity: 0.6; }
+        .update-btn.loading-state { background: rgba(255, 255, 255, 0.6); opacity: 0.7; color: var(--text-gray); }
+        
+        .btn-group { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+        .btn { padding: 6px 18px; border: 1px solid var(--btn-border); background-color: #ffffff; color: var(--primary-blue); border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 13px; }
+        .btn.active { background-color: var(--primary-blue); color: #ffffff; }
+        .instruction-label { font-size: 12px; color: var(--text-gray); margin-bottom: 8px; }
+        .scope-header-title { font-size: 15px; font-weight: 700; color: var(--primary-blue); margin: 20px 0 12px 0; padding-bottom: 4px; border-bottom: 1px dashed var(--border-light); }
+        .cards-grid { display: flex; flex-direction: column; gap: 14px; width: 100%; }
+        .subject-card { border: 1px solid var(--border-light); border-radius: 6px; background-color: #ffffff; overflow: hidden; box-sizing: border-box; width: 100%; }
+        .card-header { background-color: var(--card-header-bg); padding: 8px 14px; font-weight: 700; font-size: 13px; border-bottom: 1px solid var(--border-light); color: var(--text-blue); }
+        .card-body { padding: 12px 14px; }
+        .topic-row { margin-bottom: 12px; }
+        .topic-row:last-child { margin-bottom: 0; }
+        .topic-name { font-weight: 700; font-size: 13px; color: var(--text-dark); }
+        .topic-pages { font-size: 11px; color: var(--text-gray); margin-top: 2px; }
+        .status-unconfirmed { color: #86868b; font-size: 12px; }
+        .view-section { display: none; }
+        .view-section.active-view { display: block; }
+        @media (max-width: 600px) { .info-banner { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<!-- 💡 青い帯（トップバー）の中にヘッダー文字一式を完全に移動 -->
+<div class="top-navbar-band">
+    <div class="header-content-inner">
+        <div class="header-title">
+            <h1>長久手本部校</h1>
+            <p>2026年 第4回 定期テスト模擬</p>
+        </div>
+        <div class="header-right">実力判定テスト範囲確定APP<br>生徒専用</div>
+    </div>
+</div>
+
+<div class="container">
+   
+ <div class="alert-text" id="alert-text-message">最新の保存内容を表示しています。</div>
+    
+    <div class="info-banner">
+        <div class="banner-box active" id="tab-box-default" onclick="switchMainTab('default')">
+            <div class="banner-title">決まった範囲</div>
+            <div class="banner-body">自分の中学校のテスト範囲を確認</div>
+        </div>
+        <div class="banner-box" id="tab-box-table" onclick="switchMainTab('table')">
+            <div class="banner-title">範囲表</div>
+            <div class="banner-body">単元を選ぶ前に、すべての候補を確認</div>
+        </div>
+    </div>
+    <div class="update-row">
+        <button class="update-btn" id="trigger-update-action" onclick="triggerScopeUpdateAnimation()">最新の範囲に更新</button>
+    </div>
+    
+    <div class="btn-group">
+        <button class="btn active" id="g-btn-1" onclick="changeGrade(1)">1年生</button>
+        <button class="btn" id="g-btn-2" onclick="changeGrade(2)">2年生</button>
+        <button class="btn" id="g-btn-3" onclick="changeGrade(3)">3年生</button>
+    </div>
+    <div id="section-default-view" class="view-section active-view">
+        <div class="instruction-label">自分の中学校を選んでください。</div>
+        <div class="btn-group" id="school-buttons-container"></div>
+        <div id="scope-title-output" class="scope-header-title"></div>
+        <div id="cards-grid-output" class="cards-grid"></div>
+    </div>
+    <div id="section-table-view" class="view-section">
+        <div class="instruction-label">全校舎共通の範囲表です。先生と相談して単元を決めましょう。</div>
+        <div id="table-title-output" class="scope-header-title"></div>
+        <div id="table-grid-output" class="cards-grid"></div>
+    </div>
+</div>
+<script>
+    // 【データ前半】各中学校の決まった範囲データ
+    const database = {
+        1: {
+            "nagakute": { name: "長久手中", scope: [
+                { sub: "英語", items: [{ n: "A Unit5", p: "さなる式① P88～103" }, { n: "B Unit6", p: "さなる式② P4～27" }] },
+                { sub: "社会", items: [{ n: "A アジア州", p: "地理Ⅰ P56～71" }, { n: "G 平安時代Ⅰ", p: "歴史Ⅰ P64～75" }] },
+                { sub: "数学", unconfirmed: true },
+                { sub: "国語", items: [{ n: "A 星の花が降るころに", p: "さなる式 P75～77、88～89" }, { n: "今を生きる言葉", p: "" }] },
+                { sub: "理科", items: [{ n: "C 状態変化・蒸留", p: "さなる式 P86～94" }, { n: "D 物質の溶解", p: "さなる式 P95～103" }] }
+            ]},
+            "kita": { name: "長久手北中", scope: [
+                { sub: "英語", items: [{ n: "A Unit5", p: "さなる式① P88～103" }, { n: "B Unit6", p: "さなる式② P4～27" }] },
+                { sub: "社会", items: [{ n: "A アジア州", p: "地理Ⅰ P56～71" }, { n: "H 平安時代Ⅱ＋鎌倉時代（元寇以降は除く）", p: "歴史Ⅰ P76～99（元寇以降はのぞく）" }] },
+                { sub: "数学", unconfirmed: true },
+                { sub: "国語", items: [
+                    { n: "A 星の花が降るころに", p: "さなる式 P75～77、88～89" },
+                    { n: "別版", p: "「不便」の価値を見つめ直す", isSpecialRow: true }
+                ]},
+                { sub: "理科", items: [{ n: "C 状態変化・蒸留", p: "さなる式 P86～94" }, { n: "D 物質の溶解", p: "さなる式 P95～103" }] }
+            ]},
+            "minami": { name: "長久手南中", scope: [
+                { sub: "英語", items: [{ n: "B Unit6", p: "さなる式② P4～27" }, { n: "C Unit7", p: "さなる式② P30～51" }] },
+                { sub: "社会", items: [{ n: "E 飛鳥時代", p: "歴史Ⅰ P40～51" }, { n: "F 奈良時代", p: "歴史Ⅰ P52～63" }] },
+                { sub: "数学", unconfirmed: true },
+                { sub: "国語", items: [
+                    { n: "A 星の花が降るころに", p: "さなる式 P75～77、88～89" },
+                    { n: "別版", p: "大人になれなかった弟たちに…", isSpecialRow: true }
+                ]},
+                { sub: "理科", items: [{ n: "C 状態変化・蒸留", p: "さなる式 P86～94" }, { n: "D 物質の溶解", p: "さなる式 P95～103" }] }
+            ]}
+        },
+        2: {
+            "nagakute": { name: "長久手中", scope: [
+                { sub: "英語", items: [{ n: "B Unit4", p: "さなる式① P98～123" }, { n: "C Unit5", p: "さなる式② P4～21" }] },
+                { sub: "社会", items: [{ n: "G 中部地方", p: "地理Ⅱ P116～129" }, { n: "H 関東地方", p: "地理Ⅱ P130～143" }] },
+                { sub: "数学", items: [{ n: "共通 角度総合", p: "さなる式② p5～p22" }, { n: "A 一次関数（二元一次方程式とグラフから最後まで）", p: "さなる式① p97～p117" }] },
+                { sub: "国語", items: [
+                    { n: "B 平家物語", p: "さなる式 P112～114、124～125" },
+                    { n: "別版", p: "字のない葉書", isSpecialRow: true }
+                ]},
+                { sub: "理科", items: [{ n: "別版", p: "A,B,Cの中から2単元選択" }] }
+            ]},
+            "kita": { name: "長久手北中", scope: [
+                { sub: "英語", items: [{ n: "B Unit4", p: "さなる式① P98～123" }, { n: "C Unit5", p: "さなる式② P4～21" }] },
+                { sub: "社会", items: [{ n: "D 九州地方", p: "地理Ⅱ P78～89" }, { n: "E 中国・四国地方", p: "地理Ⅱ P90～101" }] },
+                { sub: "数学", items: [{ n: "共通 角度総合", p: "さなる式② p5～p22" }, { n: "A 一次関数（二元一次方程式とグラフから最後まで）", p: "さなる式① p97～p117" }] },
+                { sub: "国語", items: [
+                    { n: "A モアイは語る", p: "さなる式 P98～100、108～109" },
+                    { n: "別版", p: "字のない葉書", isSpecialRow: true }
+                ]},
+                { sub: "理科", items: [{ n: "別版", p: "A,B,Cの中から2単元選択" }] }
+            ]},
+            "minami": { name: "長久手南中", scope: [
+                { sub: "英語", items: [{ n: "B Unit4", p: "さなる式① P98～123" }, { n: "C Unit5", p: "さなる式② P4～21" }] },
+                { sub: "社会", items: [{ n: "D 九州地方", p: "地理Ⅱ P78～89" }, { n: "E 中国・四国地方", p: "地理Ⅱ P90～101" }] },
+                { sub: "数学", items: [{ n: "共通 角度総合", p: "さなる式② p5～p22" }, { n: "A 一次関数（二元一次方程式とグラフから最後まで）", p: "さなる式① p97～p117" }] },
+                { sub: "国語", items: [{ n: "A モアイは語る", p: "さなる式 P98～100、108～109" }, { n: "B 平家物語", p: "さなる式 P112～114、124～125" }] },
+                { sub: "理科", items: [{ n: "別版", p: "A、B、植物、消化・吸収・呼吸の4単元の中から2つ選択" }] }
+            ]}
+        },
+        3: {
+            "nagoya": { name: "名古屋国際中", scope: [
+                { sub: "英語", items: [{ n: "B Unit4", p: "さなる式② P4～31" }, { n: "C Unit5", p: "さなる式② P34～63" }] },
+                { sub: "社会", items: [{ n: "C 内閣・裁判所・三権分立", p: "歴史・公民 P130～143" }, { n: "D 地方自治", p: "歴史・公民 P144～155" }] },
+                { sub: "数学", unconfirmed: true },
+                { sub: "国語", items: [{ n: "A 故郷", p: "さなる式 P80～83、86～89、100～101" }, { n: "B 初恋", p: "さなる式 P115、118～119" }] },
+                { sub: "理科", items: [{ n: "A 力がはたらく運動・力がはたらかない運動・慣性・力をおよぼし合う運動", p: "さなる式 P32～50" }, { n: "B 仕事", p: "さなる式 P56～67" }] }
+            ]},
+            "nagakute": { name: "長久手中", scope: [
+                { sub: "英語", items: [{ n: "B Unit4", p: "さなる式② P4～31" }, { n: "C Unit5", p: "さなる式② P34～63" }] },
+                { sub: "社会", items: [{ n: "B 選挙と政党・国会", p: "歴史・公民 P116～129" }, { n: "C 内閣・裁判所・三権分立", p: "歴史・公民 P130～143" }] },
+                { sub: "数学", items: [{ n: "A 二次関数（グラフ～変化の割合）", p: "さなる式② p5～p28" }, { n: "B 二次関数（応用）", p: "さなる式② p29～p50" }] },
+                { sub: "国語", items: [{ n: "A 故郷", p: "さなる式 P80～83、86～89、100～101" }, { n: "B 初恋", p: "さなる式 P115、118～119" }] },
+                { sub: "理科", items: [{ n: "A 力がはたらく運動・力がはたらかない運動・慣性・力をおよぼし合う運動", p: "さなる式 P32～50" }, { n: "B 仕事", p: "さなる式 P56～67" }] }
+            ]},
+            "kita": { name: "長久手北中", scope: [
+                { sub: "英語", items: [{ n: "B Unit4", p: "さなる式② P4～31" }, { n: "C Unit5", p: "さなる式② P34～63" }] },
+                { sub: "社会", items: [{ n: "A 基本的人権", p: "歴史・公民 P102～115" }, { n: "B 選挙と政党・国会", p: "歴史・公民 P116～129" }] },
+                { sub: "数学", items: [{ n: "A 二次関数（グラフ～変化の割合）", p: "さなる式② p5～p28" }, { n: "B 二次関数（応用）", p: "さなる式② p29～p50" }] },
+                { sub: "国語", items: [{ n: "B 初恋", p: "さなる式 P115、118～119" }, { n: "C 君待つと", p: "さなる式 P121、125～127" }] },
+                { sub: "理科", items: [{ n: "A 力がはたらく運動・力がはたらかない運動・慣性・力をおよぼし合う運動", p: "さなる式 P32～50" }, { n: "B 仕事", p: "さなる式 P56～67" }] }
+            ]},
+            "minami": { name: "長久手南中", scope: [
+                { sub: "英語", items: [{ n: "B Unit4", p: "さなる式② P4～31" }, { n: "C Unit5", p: "さなる式② P34～63" }] },
+                { sub: "社会", items: [{ n: "別版", p: "歴史：冷戦から現代" }, { n: "", p: "公民：現代社会と社会生活" }] },
+                { sub: "数学", items: [{ n: "A 二次関数（グラフ～変化の割合）", p: "さなる式② p5～p28" }, { n: "B 二次関数（応用）", p: "さなる式② p29～p50" }] },
+                { sub: "国語", items: [{ n: "B 初恋", p: "さなる式 P115、118～119" }, { n: "C 君待つと", p: "さなる式 P121、125～127" }] },
+                { sub: "理科", items: [{ n: "A 力がはたらく運動・力がはたらかない運動・慣性・力をおよぼし合う運動", p: "さなる式 P32～50" }, { n: "B 仕事", p: "さなる式 P56～67" }] }
+            ]}
+        }
+    };
+    const tableDatabase = {
+        1: [
+            { sub: "英語", items: [{ n: "A Unit5", p: "さなる式① P88～103" }, { n: "B Unit6", p: "さなる式② P4～27" }, { n: "C Unit7", p: "さなる式② P30～51" }, { n: "D Unit8", p: "さなる式② P54～77" }]},
+            { sub: "数学", items: [{ n: "A 方程式の利用", p: "① p137～p154" }, { n: "B 関数関係～比例のグラフ", p: "② p5～p30" }, { n: "C 反比例のグラフ～比例反比例の利用", p: "② p31～p46" }, { n: "D 平面図形の用語と記号～作図の応用", p: "② p53～p78" }]},
+            { sub: "理科", items: [{ n: "A 光の反射・光の屈折・凸レンズのはたらき", p: "さなる式 P4～18" }, { n: "B 音の伝わり方・音の大きさや高さ", p: "さなる式 P24～34" }, { n: "C 状態変化・蒸留", p: "さなる式 P86～94" }, { n: "D 物質の溶解", p: "さなる式 P95～103" }, { n: "E 火山", p: "さなる式 P150～155" }, { n: "F 地震", p: "さなる式 P172～180" }]},
+            { sub: "社会", items: [{ n: "A アジア州", p: "地理Ⅰ P56～71" }, { n: "B ヨーロッパ州", p: "地理Ⅰ P72～85" }, { n: "C アフリカ州", p: "地理Ⅰ P86～99" }, { n: "D 北アメリカ州", p: "地理Ⅰ P100～115" }, { n: "E 飛鳥時代", p: "歴史Ⅰ P40～51" }, { n: "F 奈良時代", p: "歴史Ⅰ P52～63" }, { n: "G 平安時代Ⅰ", p: "歴史Ⅰ P64～75" }, { n: "H 平安時代Ⅱ＋鎌倉時代（元寇以降は除く）", p: "歴史Ⅰ P76～99（元寇以降はのぞく）" }]},
+            { sub: "国語", items: [{ n: "A 星の花が降るころに", p: "さなる式 P75～77、88～89" }, { n: "B 「言葉」をもつ鳥、シジュウカラ", p: "さなる式 P92～94、104～105" }, { n: "C 蓬莱の玉の枝", p: "さなる式 P110～112、116～117" }, { n: "D 今を生きる言葉", p: "さなる式 P115、117" }]}
+        ],
+        2: [
+            { sub: "英語", items: [{ n: "A Let's Read 1", p: "さなる式① P86～95" }, { n: "B Unit4", p: "さなる式① P98～123" }, { n: "C Unit5", p: "さなる式② P4～21" }, { n: "D Unit6", p: "さなる式② P24～53" }]},
+            { sub: "数学", items: [{ n: "共通 角度総合", p: "さなる式② p5～p22" }, { n: "A 一次関数（二元一次方程式とグラフから最後まで）", p: "さなる式① p97～p117" }, { n: "B 合同条件と証明", p: "さなる式② p29～p35" }]},
+            { sub: "理科", items: [{ n: "A 心臓と血液の循環・排出", p: "さなる式 P182～191" }, { n: "B 感覚器官・動物の反応のしかた", p: "さなる式 P196～206" }, { n: "C 圧力・空気の圧力", p: "さなる式 P212～223" }, { n: "D 空気中の水蒸心の変化・雪ができるわけ", p: "さなる式 P230～241" }, { n: "E 電流が流れる回路・電流と電圧計・電圧と電圧計", p: "さなる式 P4～19" }, { n: "F 電流・電圧の関係と抵抗", p: "さなる式 P20～29" }]},
+            { sub: "社会", items: [{ n: "A 江戸時代（寛政の改革～天保の改革）", p: "歴史Ⅱ P52～63" }, { n: "B 欧米の発展", p: "歴史Ⅱ P64～81" }, { n: "C 江戸時代（日本の開国）", p: "歴史Ⅱ P82～87" }, { n: "D 九州地方", p: "地理Ⅱ P78～89" }, { n: "E 中国・四国地方", p: "地理Ⅱ P90～101" }, { n: "F 近畿地方", p: "地理Ⅱ P102～115" }, { n: "G 中部地方", p: "地理Ⅱ P116～129" }, { n: "H 関東地方", p: "地理Ⅱ P130～143" }]},
+            { sub: "国語", items: [{ n: "A モアイは語る", p: "さなる式 P98～100、108～109" }, { n: "B 平家物語", p: "さなる式 P112～114、124～125" }, { n: "C 仁和寺にある法師", p: "さなる式 P118、125" }, { n: "D 漢詩の風景", p: "さなる式 P122～123、125" }]}
+        ],
+        3: [
+            { sub: "英語", items: [{ n: "A Let's Read 1", p: "さなる式① P80～93" }, { n: "B Unit4", p: "さなる式② P4～31" }, { n: "C Unit5", p: "さなる式② P34～63" }, { n: "D Unit6", p: "さなる式② P66～93" }]},
+            { sub: "数学", items: [{ n: "A 二次関数（グラフ～変化の割合）", p: "さなる式② p5～p28" }, { n: "B 二次関数（応用）", p: "さなる式② p29～p50" }, { n: "C 相似な図形（相似と相似比～平行線と比まで）", p: "さなる式② p57～p84" }, { n: "D 相似な図形（角の二等分線～面積比・体積比）", p: "さなる式② p85～p106" }]},
+            { sub: "理科", items: [{ n: "A 力がはたらく運動・力がはたらかない運動・慣性・力をおよぼし合う運動", p: "さなる式 P32～50" }, { n: "B 仕事", p: "さなる式 P56～67" }, { n: "C 力学的エネルギーの保存・エネルギーの移り変わり", p: "さなる式 P68～74、80～86" }, { n: "D 太陽の動き・星の動き", p: "さなる式 P180～194" }, { n: "E 四季の星座・季節の変化", p: "さなる式 P195～208" }, { n: "F 太陽と月・太陽系と銀河系", p: "さなる式 P214～228" }]},
+            { sub: "社会", items: [{ n: "A 基本的人権", p: "歴史Ⅲ・公民 P102～115" }, { n: "B 選挙と政党・国会", p: "歴史Ⅲ・公民 P116～129" }, { n: "C 内閣・裁判所・三権分立", p: "歴史Ⅲ・公民 P130～143" }, { n: "D 地方自治", p: "歴史Ⅲ・公民 P144～155" }, { n: "E 家計・消費・流通", p: "歴史Ⅲ・公民 P156～167" }]},
+            { sub: "国語", items: [{ n: "A 故郷", p: "さなる式 P80～83、86～89、100～101" }, { n: "B 初恋", p: "さなる式 P115、118～119" }, { n: "C 君待つと", p: "さなる式 P121、125～127" }, { n: "D 夏草", p: "さなる式 P131～135" }]}
+        ]
+    };
+    let currentGrade = 1;
+    let currentSchool = "nagakute";
+    let activeTab = "default";
+
+    function triggerScopeUpdateAnimation() {
+        const btn = document.getElementById('trigger-update-action');
+        const alertTxt = document.getElementById('alert-text-message');
+        
+        btn.classList.add('loading-state');
+        btn.disabled = true;
+        alertTxt.innerText = "最新の範囲を確認しています…";
+        
+        setTimeout(() => {
+            btn.classList.remove('loading-state');
+            btn.disabled = false;
+            alertTxt.innerText = "最新の保存内容を表示しています。";
+        }, 1500);
+    }
+
+    function switchMainTab(tabName) {
+        activeTab = tabName;
+        document.querySelectorAll('.banner-box').forEach(box => box.classList.remove('active'));
+        document.getElementById('section-default-view').classList.remove('active-view');
+        document.getElementById('section-table-view').classList.remove('active-view');
+
+        if (tabName === 'default') {
+            document.getElementById('tab-box-default').classList.add('active');
+            document.getElementById('section-default-view').classList.add('active-view');
+            renderScope();
+        } else {
+            document.getElementById('tab-box-table').classList.add('active');
+            document.getElementById('section-table-view').classList.add('active-view');
+            renderTableView();
+        }
+    }
+
+    function changeGrade(grade) {
+        currentGrade = grade;
+        document.querySelectorAll('[id^="g-btn-"]').forEach(btn => btn.classList.remove('active'));
+        document.getElementById('g-btn-' + grade).classList.add('active');
+        currentSchool = (grade === 3) ? "nagoya" : "nagakute";
+        renderSchoolButtons();
+        if (activeTab === 'default') renderScope();
+        else renderTableView();
+    }
+
+    function renderSchoolButtons() {
+        const container = document.getElementById('school-buttons-container');
+        container.innerHTML = "";
+        const schools = database[currentGrade];
+        if(!schools) return;
+        Object.keys(schools).forEach(key => {
+            const btn = document.createElement('button');
+            btn.className = "btn" + (key === currentSchool ? " active" : "");
+            btn.innerText = schools[key].name;
+            btn.onclick = () => {
+                currentSchool = key;
+                container.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                renderScope();
+            };
+            container.appendChild(btn);
+        });
+    }
+
+    function createCardHTML(card) {
+        const cardEl = document.createElement('div');
+        cardEl.className = "subject-card";
+        let contentHtml = "";
+        if (card.unconfirmed) {
+            contentHtml = `<span class="status-unconfirmed">未決定</span>`;
+        } else {
+            card.items.forEach(item => {
+                if (item.isSpecialRow) {
+                    contentHtml += `<div class="topic-row" style="margin-top: 10px;"><div class="topic-name">${item.n}</div><div class="topic-pages" style="font-size:13px; color:var(--text-dark); margin:0;">${item.p}</div></div>`;
+                } else {
+                    contentHtml += `<div class="topic-row">${item.n ? `<div class="topic-name">${item.n}</div>` : ''}${item.p ? `<div class="topic-pages">${item.p}</div>` : ''}</div>`;
+                }
+            });
+        }
+        cardEl.innerHTML = `<div class="card-header">${card.sub}</div><div class="card-body">${contentHtml}</div>`;
+        return cardEl;
+    }
+
+    function renderScope() {
+        const schoolData = database[currentGrade][currentSchool];
+        document.getElementById('scope-title-output').innerText = `${schoolData.name} ${currentGrade}年生のテスト範囲`;
+        const grid = document.getElementById('cards-grid-output');
+        grid.innerHTML = "";
+        schoolData.scope.forEach(card => grid.appendChild(createCardHTML(card)));
+    }
+
+    function renderTableView() {
+        document.getElementById('table-title-output').innerText = `${currentGrade}年生 共通範囲表`;
+        const grid = document.getElementById('table-grid-output');
+        grid.innerHTML = "";
+        const listData = tableDatabase[currentGrade];
+        if (!listData || listData.length === 0) {
+            grid.innerHTML = `<div class="status-unconfirmed" style="padding:20px;">データがありません。</div>`;
+            return;
+        }
+        listData.forEach(card => grid.appendChild(createCardHTML(card)));
+    }
+
+    changeGrade(1);
+</script>
+</body>
+</html>
