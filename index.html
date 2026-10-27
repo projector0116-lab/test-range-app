@@ -5,11 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>さなる式 定期テスト範囲確認</title>
     <style>
-           <style>
         :root {
             --primary-blue: #0070e0;
             --blue-gradient: linear-gradient(135deg, #0076f7 0%, #0052b3 100%);
-            --top-dark-blue: #0056b3; /* 💡 タブレット画面に合わせた鮮やかな青色に変更 */
+            --top-dark-blue: #1c3d5a; /* 本物の画面に合わせた深みのある紺・青色 */
             --btn-border: #1473e6;
             --bg-body: #ffffff;
             --text-dark: #2c2c2c;
@@ -24,19 +23,17 @@
             margin: 0; padding: 0; background-color: var(--bg-body); color: var(--text-dark);
         }
         
-        /* 💡 帯の中の文字幅が、下のコンテンツ（600px）とぴったり重なるように修正 */
+        /* 💡 ヘッダーの文字を丸ごと包み込む青い帯（トップバー） */
         .top-navbar-band {
             width: 100%; 
             background-color: var(--top-dark-blue); 
-            padding: 15px 0; 
+            padding: 15px 20px; 
             box-sizing: border-box;
             color: #ffffff;
         }
         .header-content-inner {
-            max-width: 600px; /* 下のカードと完全に同じ横幅 */
+            max-width: 600px;
             margin: 0 auto;
-            padding: 0 15px;  /* 左右の余白（ズレ防止） */
-            box-sizing: border-box;
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
@@ -49,6 +46,7 @@
         .top-meta { font-size: 11px; color: var(--text-gray); margin-bottom: 8px; }
         .alert-text { color: var(--alert-yellow); font-size: 12px; margin-bottom: 12px; font-weight: bold; min-height: 18px; }
         
+        /* 上下タブボタン */
         .info-banner { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
         .banner-box { border: 1px solid var(--border-light); border-radius: 8px; overflow: hidden; cursor: pointer; background-color: #ffffff; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .banner-box .banner-title { padding: 10px 14px; font-weight: 700; font-size: 14px; color: var(--text-dark); background-color: #ffffff; border-bottom: 1px solid #f0f0f5; }
@@ -81,7 +79,8 @@
         .view-section.active-view { display: block; }
         @media (max-width: 600px) { .info-banner { grid-template-columns: 1fr; } }
     </style>
-
+</head>
+<body>
 
 <!-- 💡 青い帯（トップバー）の中にヘッダー文字一式を完全に移動 -->
 <div class="top-navbar-band">
@@ -178,7 +177,7 @@
                 { sub: "数学", items: [{ n: "共通 角度総合", p: "さなる式② p5～p22" }, { n: "A 一次関数（二元一次方程式とグラフから最後まで）", p: "さなる式① p97～p117" }] },
                 { sub: "国語", items: [
                     { n: "A モアイは語る", p: "さなる式 P98～100、108～109" },
-                    { n: "別班", p: "字のない葉書", isSpecialRow: true }
+                    { n: "別版", p: "字のない葉書", isSpecialRow: true }
                 ]},
                 { sub: "理科", items: [{ n: "別班", p: "A,B,Cの中から2単元選択" }] }
             ]},
@@ -214,7 +213,7 @@
             ]},
             "minami": { name: "長久手南中", scope: [
                 { sub: "英語", items: [{ n: "B Unit4", p: "さなる式② P4～31" }, { n: "C Unit5", p: "さなる式② P34～63" }] },
-                { sub: "社会", items: [{ n: "別版", p: "歴史：冷戦から現代" }, { n: "", p: "公民：現代社会と社会生活" }] },
+                { sub: "社会", items: [{ n: "別班", p: "歴史：冷戦から現代" }, { n: "", p: "公民：現代社会と社会生活" }] },
                 { sub: "数学", items: [{ n: "A 二次関数（グラフ～変化の割合）", p: "さなる式② p5～p28" }, { n: "B 二次関数（応用）", p: "さなる式② p29～p50" }] },
                 { sub: "国語", items: [{ n: "B 初恋", p: "さなる式 P115、118～119" }, { n: "C 君待つと", p: "さなる式 P121、125～127" }] },
                 { sub: "理科", items: [{ n: "A 力がはたらく運動・力がはたらかない運動・慣性・力をおよぼし合う運動", p: "さなる式 P32～50" }, { n: "B 仕事", p: "さなる式 P56～67" }] }
